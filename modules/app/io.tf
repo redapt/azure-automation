@@ -10,3 +10,4 @@ variable resource_group_name {}
 variable storage_account {}
 variable storage_container {}
 variable network_interface_ids { type = "list" }
+variable docker_image { default = "redapt/redapt-demo" }

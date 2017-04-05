@@ -50,8 +50,8 @@ resource "azurerm_network_security_group" "main" {
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "*"
+    source_port_range          = "80"
+    destination_port_range     = "80"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -103,4 +103,6 @@ module "app" {
   size         = "Basic_A1"
   location     = "${var.location}"
   network_interface_ids = ["${azurerm_network_interface.main.id}"]
+
+  docker_image = "redapt/redapt-demo2"
 }
