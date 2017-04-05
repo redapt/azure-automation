@@ -1,5 +1,9 @@
 machine:
   environment:
+    AZ_STATE_STORAGE_ACCOUNT_NAME: redapt
+    AZ_STATE_CONTAINER_NAME: terraform-state
+    AZ_STATE_KEY: terraform.tfstate
+    # AZ_STATE_ACCESS_KEY: (Populated by circleci project env vars.)
     TERRAFORM_VER: 0.8.8
     PATH: $PATH:$HOME/.local/bin:$HOME/bin
   cache_directories:
@@ -16,11 +20,12 @@ dependencies:
       fi
 test:
   override:
+    # (AZ_ vars come from circleci project env vars)
     - echo "az_subscription_id = \"$AZ_SUBSCRIPTION_ID\"" >> secret.tfvars
     - echo "az_client_id = \"$AZ_CLIENT_ID\"" >> secret.tfvars
     - echo "az_client_secret = \"$AZ_CLIENT_SECRET\"" >> secret.tfvars
     - echo "az_tenant_id = \"$AZ_TENANT_ID\"" >> secret.tfvars
-    - echo "az_state_access_key = \"$AZ_STATE_ACCESS_KEY\"" >> secret.tfvars
+    - bash _ci_remote_enable.sh
     - bash plan.sh
 deployment:
   master:
