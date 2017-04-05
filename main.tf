@@ -93,14 +93,14 @@ resource "azurerm_storage_container" "main" {
   container_access_type = "private"
 }
 
-#module "app" {
-#  source = "./modules/app"
-#  resource_group_name = "${azurerm_resource_group.main.name}"
-#  env_name     = "${var.env_name}"
-#  storage_account = "${azurerm_storage_account.main.primary_blob_endpoint}"
-#  storage_container = "${azurerm_storage_container.main.name}"
+module "app" {
+  source = "./modules/app"
+  resource_group_name = "${azurerm_resource_group.main.name}"
+  env_name     = "${var.env_name}"
+  storage_account = "${azurerm_storage_account.main.primary_blob_endpoint}"
+  storage_container = "${azurerm_storage_container.main.name}"
 
-#  size         = "Basic_A1"
-#  location     = "${var.location}"
-#  network_interface_ids = ["${azurerm_network_interface.main.id}"]
-#}
+  size         = "Basic_A1"
+  location     = "${var.location}"
+  network_interface_ids = ["${azurerm_network_interface.main.id}"]
+}
