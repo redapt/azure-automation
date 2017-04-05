@@ -4,6 +4,9 @@ machine:
   pre:
     - wget https://releases.hashicorp.com/terraform/0.8.8/terraform_0.8.8_linux_amd64.zip
     - unzip terraform_0.8.8_linux_amd64.zip -d terraform 
+test:
+  override:
+    - terraform/terraform plan -var-file="secret.tfvars"
 deployment:
   master:
     branch: master
