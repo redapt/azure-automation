@@ -22,10 +22,10 @@ dependencies:
 test:
   override:
     # (AZ_ vars come from circleci project env vars)
-    - echo "az_subscription_id = \"$ARM_SUBSCRIPTION_ID\"" >> secret.tfvars
-    - echo "az_client_id = \"$ARM_CLIENT_ID\"" >> secret.tfvars
-    - echo "az_client_secret = \"$ARM_CLIENT_SECRET\"" >> secret.tfvars
-    - echo "az_tenant_id = \"$ARM_TENANT_ID\"" >> secret.tfvars
+    - echo "arm_subscription_id = \"$ARM_SUBSCRIPTION_ID\"" >> secret.tfvars
+    - echo "arm_client_id = \"$ARM_CLIENT_ID\"" >> secret.tfvars
+    - echo "arm_client_secret = \"$ARM_CLIENT_SECRET\"" >> secret.tfvars
+    - echo "arm_tenant_id = \"$ARM_TENANT_ID\"" >> secret.tfvars
     - bash _ci_remote_enable.sh
     - terraform get
     - bash plan.sh
