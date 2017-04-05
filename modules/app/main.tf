@@ -53,7 +53,7 @@ resource "azurerm_virtual_machine_extension" "node" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "bash -c 'sudo docker rm old-app && sudo docker rename app old-app && sudo docker kill old-app && sudo docker run --name app -p 80:80 -d redapt/redapt-demo'"
+        "commandToExecute": "bash -c 'sudo docker rm old-app; sudo docker rename app old-app; sudo docker kill old-app; sudo docker run --name app -p 80:80 -d redapt/redapt-demo'"
     }
 SETTINGS
 
