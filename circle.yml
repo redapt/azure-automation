@@ -21,9 +21,9 @@ test:
     - echo "az_client_secret = \"$AZ_CLIENT_SECRET\"" >> secret.tfvars
     - echo "az_tenant_id = \"$AZ_TENANT_ID\"" >> secret.tfvars
     - echo "az_state_access_key = \"$AZ_STATE_ACCESS_KEY\"" >> secret.tfvars
-    - sh ./plan.sh
+    - bash plan.sh
 deployment:
   master:
     branch: master
     commands:
-      - sh ./apply.sh
+      - bash apply.sh
