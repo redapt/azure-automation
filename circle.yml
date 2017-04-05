@@ -1,19 +1,29 @@
 machine:
+  environment:
+    TERRAFORM_VER: 0.8.8
+    PATH: $PATH:$HOME/.local/bin:$HOME/bin
   cache_directories:
-    - terraform
-  pre:
-    - wget https://releases.hashicorp.com/terraform/0.8.8/terraform_0.8.8_linux_amd64.zip
-    - unzip terraform_0.8.8_linux_amd64.zip -d terraform 
+    - ~/.local/bin
+dependencies:
+  override:
+    - |
+      if [[ ! -f ~/.local/bin/terraform ]]; then
+        mkdir -p ~/.local/bin
+        cd ~/.local/bin
+        wget "https://releases.hashicorp.com/terraform/${TERRAFORM_VER}/terraform_${TERRAFORM_VER}_linux_amd64.zip"
+        unzip *.zip
+        rm *.zip
+      fi
 test:
   override:
-    - terraform/terraform plan -var-file="secret.tfvars"
+	- echo "az_subscription_id = \"$AZ_SUBSCRIPTION_ID\"" >> secret.tfvars
+	- echo "az_client_id = \"$AZ_CLIENT_ID\"" >> secret.tfvars
+	- echo "az_client_secret = \"$AZ_CLIENT_SECRET\"" >> secret.tfvars
+	- echo "az_tenant_id = \"$AZ_TENANT_ID\"" >> secret.tfvars
+	- echo "az_state_access_key = \"$AZ_STATE_ACCESS_KEY\"" >> secret.tfvars
+    - sh ./plan.sh
 deployment:
   master:
     branch: master
     commands:
-      - echo "az_subscription_id = \"$AZ_SUBSCRIPTION_ID\"" >> secret.tfvars
-      - echo "az_client_id = \"$AZ_CLIENT_ID\"" >> secret.tfvars
-      - echo "az_client_secret = \"$AZ_CLIENT_SECRET\"" >> secret.tfvars
-      - echo "az_tenant_id = \"$AZ_TENANT_ID\"" >> secret.tfvars
-      - echo "az_state_access_key = \"$AZ_STATE_ACCESS_KEY\"" >> secret.tfvars
-      - terraform/terraform apply -var-file="secret.tfvars"
+      - sh ./apply.sh
