@@ -1,2 +1,3 @@
 secret.tfvars
 terraform.tfstate
+.terraform
