@@ -1,7 +1,7 @@
 machine:
   pre:
-    - curl -sSL https://releases.hashicorp.com/terraform/0.8.8/terraform_0.8.8_linux_amd64.zip > terraform.zip
-    - mkdir terraform ; cd terraform ; unzip ../terraform.zip ; install * /usr/local/bin
+    - wget https://releases.hashicorp.com/terraform/0.8.8/terraform_0.8.8_linux_amd64.zip
+    - unzip terraform_0.8.8_linux_amd64.zip
 deployment:
   master:
     branch: master
