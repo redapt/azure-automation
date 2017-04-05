@@ -7,7 +7,9 @@ variable size          { default = "Basic_A1" }
 variable location      { default = "West US" }
 variable env_name {}
 variable resource_group_name {}
-variable storage_account {}
-variable storage_container {}
-variable network_interface_ids { type = "list" }
+variable subnet_id {}
 variable docker_image { default = "redapt/redapt-demo" }
+variable storage_account_primary_blob_endpoint {}
+variable storage_account_name {}
+
+output "public_ip" { value = "${ azurerm_public_ip.app.ip_address }" }

@@ -28,55 +28,8 @@ resource "azurerm_subnet" "main" {
   address_prefix       = "10.0.1.0/24"
 }
 
-resource "azurerm_public_ip" "main" {
-  name                         = "${var.env_name}-main-1"
-  location                     = "${var.location}"
-  resource_group_name          = "${azurerm_resource_group.main.name}"
-  public_ip_address_allocation = "static"
-
-  tags {
-    environment = "${var.env_name}"
-  }
-}
-
-resource "azurerm_network_security_group" "main" {
-  name                = "${var.env_name}_app_sg1"
-  location            = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.main.name}"
-
-  security_rule {
-    name                       = "allow_all"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "80"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  tags {
-    environment = "${var.env_name}"
-  }
-}
-
-resource "azurerm_network_interface" "main" {
-  name                = "${var.env_name}-ni"
-  location            = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.main.name}"
-  network_security_group_id = "${azurerm_network_security_group.main.id}"
-
-  ip_configuration {
-    name                          = "mainconfiguration1"
-    subnet_id                     = "${azurerm_subnet.main.id}"
-    private_ip_address_allocation = "dynamic"
-    public_ip_address_id          = "${azurerm_public_ip.main.id}"
-  }
-}
-
 resource "azurerm_storage_account" "main" {
-  name                = "redapt${var.env_name}sa"
+  name                = "redapt${var.env_name}"
   resource_group_name = "${azurerm_resource_group.main.name}"
   location            = "${var.location}"
   account_type        = "Standard_LRS"
@@ -86,23 +39,19 @@ resource "azurerm_storage_account" "main" {
   }
 }
 
-resource "azurerm_storage_container" "main" {
-  name                  = "${var.env_name}-vhds"
-  resource_group_name   = "${azurerm_resource_group.main.name}"
-  storage_account_name  = "${azurerm_storage_account.main.name}"
-  container_access_type = "private"
-}
-
 module "app" {
   source = "./modules/app"
   resource_group_name = "${azurerm_resource_group.main.name}"
   env_name     = "${var.env_name}"
-  storage_account = "${azurerm_storage_account.main.primary_blob_endpoint}"
-  storage_container = "${azurerm_storage_container.main.name}"
+  subnet_id    = "${azurerm_subnet.main.id}"
+
+  storage_account_name = "${azurerm_storage_account.main.name}"
+  storage_account_primary_blob_endpoint = "${azurerm_storage_account.main.primary_blob_endpoint}"
 
   size         = "Basic_A1"
   location     = "${var.location}"
-  network_interface_ids = ["${azurerm_network_interface.main.id}"]
 
-  docker_image = "redapt/redapt-demo2"
+  docker_image = "redapt/redapt-demo"
 }
+
+output "app_public_ip" { value = "${ module.app.public_ip }" }
