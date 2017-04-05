@@ -6,6 +6,9 @@ resource "azurerm_virtual_machine" "node" {
     resource_group_name  = "${var.resource_group_name}"
     network_interface_ids = ["${var.network_interface_ids}"]
 
+    # FOR DEMONSTRATION PURPOSES
+    delete_os_disk_on_termination = "true"
+
     storage_image_reference {
         publisher = "Canonical"
         offer     = "UbuntuServer"
